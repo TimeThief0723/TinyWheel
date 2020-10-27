@@ -6,6 +6,8 @@
 
 using namespace std;
 
+namespace TinyWheel{
+
 template<class T>
 class BlockingQueue {
 public:
@@ -76,3 +78,5 @@ private:
 	condition_variable m_cv;
 	volatile bool destoryed_ = false;
 };
+
+} //namespace 
