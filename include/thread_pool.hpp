@@ -14,7 +14,7 @@
 
 using namespace std;
 
-namespace TinyWheel{
+namespace tiny_wheel{
 
 class WorkGroup{
 public:

@@ -3,7 +3,7 @@
 #include "thread_pool.hpp"
 
 using namespace std;
-using namespace TinyWheel;
+using namespace tiny_wheel;
 
 int func_sum(int64_t *data, size_t len, int64_t *ret){
     *ret = 0;

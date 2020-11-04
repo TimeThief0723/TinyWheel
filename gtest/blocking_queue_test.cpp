@@ -7,7 +7,7 @@
 #include "dummy_object.h"
 
 using namespace std;
-using namespace TinyWheel;
+using namespace tiny_wheel;
 
 TEST(BlockingQueue, grammar)
 {

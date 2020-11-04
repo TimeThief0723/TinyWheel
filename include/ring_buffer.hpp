@@ -8,7 +8,7 @@
 #include <vector>
 using namespace std;
 
-namespace TinyWheel{
+namespace tiny_wheel{
 
 template<class T>
 class RingBuffer{

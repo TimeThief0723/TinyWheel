@@ -3,7 +3,7 @@
 #include "object_counter.hpp"
 
 using namespace std;
-using namespace TinyWheel;
+using namespace tiny_wheel;
 
 class TestA : public ObjectCounter<TestA> {
     int a;

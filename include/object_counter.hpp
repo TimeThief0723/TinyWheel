@@ -6,7 +6,7 @@
 #include<atomic>
 using namespace std;
 
-namespace TinyWheel{
+namespace tiny_wheel{
 
 template<class T>
 class ObjectCounter{
