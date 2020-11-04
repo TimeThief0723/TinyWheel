@@ -14,14 +14,15 @@ public:
 	BlockingQueue(size_t max_size = 1024) : m_max_size(max_size) {}
 
 	template<class TypeWithRef>
-	void push(TypeWithRef &&value) {
+	bool push(TypeWithRef &&value) {
 		unique_lock<mutex> lock(m_mutex);
 		m_cv.wait(lock, [&]() { return m_queue.size() < m_max_size || destoryed_; });
 		if(destoryed_){
-			return ;
+			return false;
 		}
 		m_queue.emplace_back(std::forward<TypeWithRef>(value));
 		m_cv.notify_one();
+		return true;
 	}
 
 	template<class TypeWithRef>
@@ -35,15 +36,16 @@ public:
         return true;
     }
 
-	void pop(T &ret) {
+	bool pop(T &ret) {
 		unique_lock<mutex> lock(m_mutex);
 		m_cv.wait(lock, [&]() { return m_queue.size() > 0 || destoryed_; });
 		if(destoryed_){
-			return ;
+			return false;
 		}
 		ret = move(m_queue.front());
 		m_queue.pop_front();
 		m_cv.notify_one();
+		return true;
 	}
 
 	bool try_pop(T &ret){
