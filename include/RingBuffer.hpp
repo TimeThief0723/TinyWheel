@@ -1,3 +1,7 @@
+/* 
+	github: https://github.com/TimeThief0723/TinyWheel
+*/
+
 #pragma once
 #include <iostream>
 #include <utility>
