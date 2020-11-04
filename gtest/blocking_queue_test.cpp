@@ -1,18 +1,20 @@
-#include <gtest/gtest.h>
-#include <thread>
-#include <vector>
-#include <utility>
-#include <atomic>
 #include "blocking_queue.hpp"
+
+#include <gtest/gtest.h>
+
+#include <atomic>
+#include <thread>
+#include <utility>
+#include <vector>
+
 #include "dummy_object.h"
 
 using namespace std;
 using namespace tiny_wheel;
 
-TEST(BlockingQueue, grammar)
-{
+TEST(BlockingQueue, grammar) {
     BlockingQueue<OjbectOnlyMove> q1;
-    OjbectOnlyMove a1,a2;
+    OjbectOnlyMove a1, a2;
     q1.push(move(a1));
     q1.try_push(move(a2));
     q1.pop(a2);
@@ -22,11 +24,10 @@ TEST(BlockingQueue, grammar)
     OjbectOnlyCopy b;
     q2.push(b);
     q2.try_push(b);
-    ASSERT_EQ(1,1);
+    ASSERT_EQ(1, 1);
 }
 
-TEST(BlockingQueue, sum)
-{
+TEST(BlockingQueue, sum) {
     BlockingQueue<uint64_t> queue;
     vector<thread> producer;
     vector<thread> consumer;
@@ -34,10 +35,10 @@ TEST(BlockingQueue, sum)
     atomic<int> producer_count(0);
     atomic<uint64_t> consumer_sum(0);
     atomic<int> consumer_count(0);
-    for(int i = 0; i < 100; i++){
+    for (int i = 0; i < 100; i++) {
         producer.emplace_back([&]() mutable {
-            for(int i = 0; i < 10000; i++){
-                uint64_t v = rand()%1000;
+            for (int i = 0; i < 10000; i++) {
+                uint64_t v = rand() % 1000;
                 producer_sum += v;
                 producer_count++;
                 queue.push(v);
@@ -45,12 +46,12 @@ TEST(BlockingQueue, sum)
         });
     }
 
-    for(int i = 0; i < 100; i++){
+    for (int i = 0; i < 100; i++) {
         consumer.emplace_back([&]() mutable {
-            while(true){
+            while (true) {
                 uint64_t v;
                 queue.pop(v);
-                if(queue.destoryed()){
+                if (queue.destoryed()) {
                     break;
                 }
                 consumer_sum += v;
@@ -60,16 +61,17 @@ TEST(BlockingQueue, sum)
     }
 
     //wait all producer finish
-    for(auto &p : producer){
+    for (auto &p : producer) {
         p.join();
     }
-    
+
     //wait all consumer finish
-    while(queue.size() != 0);
+    while (queue.size() != 0)
+        ;
 
     queue.destory();
 
-    for(auto &p : consumer){
+    for (auto &p : consumer) {
         p.join();
     }
 

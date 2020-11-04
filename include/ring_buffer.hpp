@@ -6,41 +6,40 @@
 #include <iostream>
 #include <utility>
 #include <vector>
+
 using namespace std;
 
-namespace tiny_wheel{
+namespace tiny_wheel {
 
-template<class T>
-class RingBuffer{
-public:
-    RingBuffer(size_t capacity):capacity_(capacity+1), data_(capacity_){ }
+template <class T>
+class RingBuffer {
+  public:
+    RingBuffer(size_t capacity) : capacity_(capacity + 1), data_(capacity_) {}
 
-    template<class TypeWithRef>
-    void push(TypeWithRef &&v){
+    template <class TypeWithRef>
+    void push(TypeWithRef &&v) {
         data_[end_] = forward<TypeWithRef>(v);
         end_ = (end_ + 1) % capacity_;
     }
 
-    void pop(T &v){
+    void pop(T &v) {
         v = move(data_[start_]);
         start_ = (start_ + 1) % capacity_;
     }
 
-    bool full(){
+    bool full() {
         return start_ == ((end_ + 1) % capacity_);
     }
 
-    bool empty(){
+    bool empty() {
         return start_ == end_;
     }
 
-private:
+  private:
     size_t start_ = 0;
     size_t end_ = 0;
     size_t capacity_ = 0;
     vector<T> data_;
 };
 
-
-
-};
+};  // namespace tiny_wheel

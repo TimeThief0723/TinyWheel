@@ -1,28 +1,24 @@
-/* 
-	github: https://github.com/TimeThief0723/TinyWheel
+/*
+        github: https://github.com/TimeThief0723/TinyWheel
 */
 
 #pragma once
-#include<atomic>
+#include <atomic>
 using namespace std;
 
-namespace tiny_wheel{
+namespace tiny_wheel {
 
-template<class T>
-class ObjectCounter{
-public:
-    ObjectCounter(){
-        count()++;
-    }
+template <class T>
+class ObjectCounter {
+  public:
+    ObjectCounter() { count()++; }
 
-    ~ObjectCounter(){
-        count()--;
-    }
+    ~ObjectCounter() { count()--; }
 
-    static atomic<int> &count(){
+    static atomic<int> &count() {
         static atomic<int> count(0);
         return count;
     }
 };
 
-}//namespace 
+}  // namespace tiny_wheel
