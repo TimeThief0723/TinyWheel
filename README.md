@@ -1,3 +1,3 @@
 # TinyWheel
 
-A header only C++ util
+A simple header only c++ util, without any reliance of third-party lib.
