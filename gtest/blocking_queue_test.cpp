@@ -3,8 +3,8 @@
 #include <vector>
 #include <utility>
 #include <atomic>
-#include "BlockingQueue.hpp"
-#include "DummyObject.h"
+#include "blocking_queue.hpp"
+#include "dummy_object.h"
 
 using namespace std;
 using namespace TinyWheel;

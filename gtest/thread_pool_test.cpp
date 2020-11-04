@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include <thread>
-#include "ThreadPool.hpp"
-#include "DummyObject.h"
+#include "thread_pool.hpp"
 
 using namespace std;
 using namespace TinyWheel;

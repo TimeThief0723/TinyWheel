@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include "ObjectCounter.hpp"
 #include <vector>
+#include "object_counter.hpp"
 
 using namespace std;
 using namespace TinyWheel;

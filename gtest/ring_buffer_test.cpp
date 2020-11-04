@@ -4,8 +4,8 @@
 #include <utility>
 #include <atomic>
 #include <deque>
-#include "RingBuffer.hpp"
-#include "DummyObject.h"
+#include "ring_buffer.hpp"
+#include "dummy_object.h"
 
 using namespace std;
 using namespace TinyWheel;
