@@ -106,6 +106,21 @@ public:
         return ret;
     }
 
+	template<class INPUT_TYPE, class OUTPUT_TYPE>
+	void parallel_run(std::function<int(INPUT_TYPE *, size_t , OUTPUT_TYPE *)> func, INPUT_TYPE *input, size_t len, OUTPUT_TYPE *output, size_t parallel_num){
+		size_t batch_size = (len + parallel_num - 1) / parallel_num;
+		size_t offset = 0;
+		auto work_group = make_work_group();
+		for(int i = 0; i < parallel_num; i++){
+			size_t l = min(len - offset, batch_size);
+			enqueue(bind(func, input + offset, l, output++), work_group);
+			offset += l;
+		}
+        auto f = get_group_future(work_group);
+        f.wait();
+	}
+
+private:
 	void loop(){
 		while(!queue_.destoryed()){
 			WorkItem f;
@@ -116,7 +131,6 @@ public:
         }
 	}
 
-private:
 	size_t queue_size_;
 	BlockingQueue<WorkItem> queue_;
 	vector<thread> threads_;
