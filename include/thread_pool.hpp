@@ -19,23 +19,32 @@ namespace tiny_wheel {
 
 class WorkGroup {
   public:
-    WorkGroup() : count(1) {}
+    WorkGroup() : count_(1) {}
 
     void inc() {
-        count++;
+        count_++;
     }
 
     void des() {
-        count--;
-        if (count == 0) {
-            promise.set_value(ret);
+        count_--;
+        if (count_ == 0) {
+            promise_.set_value(ret_);
             delete this;
         }
     }
 
-    atomic<int> count;
-    int ret = 0;
-    std::promise<int> promise;
+    std::promise<int> &promise() {
+        return promise_;
+    }
+
+    int &ret() {
+        return ret_;
+    }
+
+  private:
+    atomic<int> count_;
+    int ret_ = 0;
+    std::promise<int> promise_;
 };
 
 class WorkItem {
@@ -52,7 +61,7 @@ class WorkItem {
         if (group_ == nullptr) {
             promise_.set_value(ret);
         } else {
-            group_->ret &= ret;
+            group_->ret() &= ret;
             group_->des();
         }
     }
@@ -87,7 +96,7 @@ class ThreadPool {
     }
 
     static future<int> get_group_future(WorkGroup *group) {
-        future<int> f = group->promise.get_future();
+        future<int> f = group->promise().get_future();
         group->des();
         return f;
     }
@@ -106,12 +115,12 @@ class ThreadPool {
     }
 
     template <class INPUT_TYPE, class OUTPUT_TYPE>
-    void parallel_run(std::function<int(INPUT_TYPE *, size_t, OUTPUT_TYPE *)> func, INPUT_TYPE *input, size_t len, OUTPUT_TYPE *output, size_t parallel_num) {
-        size_t batch_size = (len + parallel_num - 1) / parallel_num;
+    void parallel_run(std::function<int(INPUT_TYPE *, size_t, OUTPUT_TYPE *)> func, INPUT_TYPE *input, size_t input_len, OUTPUT_TYPE *output, size_t output_len) {
+        size_t batch_size = (input_len + output_len - 1) / output_len;
         size_t offset = 0;
         auto work_group = make_work_group();
-        for (int i = 0; i < parallel_num; i++) {
-            size_t l = min(len - offset, batch_size);
+        for (int i = 0; i < output_len; i++) {
+            size_t l = min(input_len - offset, batch_size);
             enqueue(bind(func, input + offset, l, output++), work_group);
             offset += l;
         }
@@ -122,11 +131,11 @@ class ThreadPool {
   private:
     void loop() {
         while (!queue_.destoryed()) {
-            WorkItem f;
-            if (!queue_.pop(f)) {
+            WorkItem wi;
+            if (!queue_.pop(wi)) {
                 continue;
             }
-            f.run();
+            wi.run();
         }
     }
 
