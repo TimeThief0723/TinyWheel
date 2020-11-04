@@ -103,8 +103,8 @@ public:
 		WorkItem wi(move(func));
 		future<int> ret = wi.get_future();
 		queue_.push(move(wi));
-        return ret;
-    }
+		return ret;
+	}
 
 	template<class INPUT_TYPE, class OUTPUT_TYPE>
 	void parallel_run(std::function<int(INPUT_TYPE *, size_t , OUTPUT_TYPE *)> func, INPUT_TYPE *input, size_t len, OUTPUT_TYPE *output, size_t parallel_num){
@@ -116,8 +116,8 @@ public:
 			enqueue(bind(func, input + offset, l, output++), work_group);
 			offset += l;
 		}
-        auto f = get_group_future(work_group);
-        f.wait();
+		auto f = get_group_future(work_group);
+		f.wait();
 	}
 
 private:
@@ -128,7 +128,7 @@ private:
 				continue;
 			}
 			f.run();
-        }
+		}
 	}
 
 	size_t queue_size_;
